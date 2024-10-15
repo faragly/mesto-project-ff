@@ -14,15 +14,3 @@ export function closeEsc(event) {
     closePopup(openedPopup);
   }
 }
-
-export function closeByClick(event) {
-  event.stopPropagation();
-  if (event.target.classList.contains('popup')) {
-    closePopup(event.target);
-  }
-}
-
-export function closePopupButton(event) {
-  const popup = event.target.closest('.popup');
-  closePopup(popup);
-}

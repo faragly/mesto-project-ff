@@ -2,27 +2,22 @@ import './pages/index.css';
 
 import { initialCards } from './components/cards.js';
 import { likeCard, deleteCard, createCard } from './components/card.js';
-import {
-  openPopup,
-  closePopup,
-  closeByClick,
-  closePopupButton,
-} from './components/modal.js';
+import { openPopup, closePopup } from './components/modal.js';
 
 /* --------------------------------- Common --------------------------------- */
 
-const popupCloseButtons = document.querySelectorAll('.popup__close');
-const allPopups = document.querySelectorAll('.popup');
+const popups = document.querySelectorAll('.popup');
 
-// кнопки закрытия попапов (по нажатию на крестик)
-popupCloseButtons.forEach((button) => {
-  button.addEventListener('click', closePopupButton);
-});
-
-// закрытие по оверлею
-allPopups.forEach((popup) => {
+popups.forEach((popup) => {
   popup.classList.add('popup_is-animated');
-  popup.addEventListener('click', closeByClick);
+  popup.addEventListener('click', (event) => {
+    if (
+      event.target === event.currentTarget ||
+      event.target.classList.contains('popup__close')
+    ) {
+      closePopup(popup);
+    }
+  });
 });
 
 /* ------------------------------ Profile edit ------------------------------ */
@@ -59,9 +54,7 @@ const addButton = document.querySelector('.profile__add-button'),
   cardNameInput = addCardForm.querySelector('.popup__input_type_card-name'),
   linkInput = addCardForm.querySelector('.popup__input_type_url');
 
-addButton.addEventListener('click', function () {
-  openPopup(popupNewCard);
-});
+addButton.addEventListener('click', () => openPopup(popupNewCard));
 
 function handlePlaceFormSubmit(event) {
   event.preventDefault();
@@ -82,10 +75,10 @@ const popupImageCard = document.querySelector('.popup_type_image'),
   popupImage = popupImageCard.querySelector('.popup__image'),
   popupCaption = popupImageCard.querySelector('.popup__caption');
 
-function openImage(event) {
-  popupImage.src = event.target.src;
-  popupImage.alt = event.target.alt;
-  popupCaption.textContent = event.target.alt;
+function openImage(image) {
+  popupImage.src = image.src;
+  popupImage.alt = image.alt;
+  popupCaption.textContent = image.alt;
   openPopup(popupImageCard);
 }
 
