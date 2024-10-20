@@ -38,6 +38,7 @@ const editProfileButton = document.querySelector('.profile__edit-button'),
   profileImage = document.querySelector('.profile__image'),
   popupEdit = document.querySelector('.popup_type_edit'),
   editProfileForm = popupEdit.querySelector('.popup__form'),
+  editProfileSaveButton = popupEdit.querySelector('.popup__button'),
   nameInput = editProfileForm.querySelector('.popup__input_type_name'),
   jobInput = editProfileForm.querySelector('.popup__input_type_description');
 
@@ -57,6 +58,7 @@ editProfileButton.addEventListener('click', function () {
 async function handleEditProfileSubmit(event) {
   event.preventDefault();
   try {
+    editProfileSaveButton.textContent = 'Сохранение...';
     const userData = await updateUserData({
       name: nameInput.value,
       about: jobInput.value,
@@ -65,6 +67,7 @@ async function handleEditProfileSubmit(event) {
   } catch (error) {
     console.error('Ошибка при редактировании профиля:', error);
   } finally {
+    editProfileSaveButton.textContent = 'Сохранить';
     editProfileForm.reset();
     closePopup(popupEdit);
   }
@@ -83,6 +86,7 @@ editProfileForm.addEventListener('submit', handleEditProfileSubmit);
 
 const popupEditImage = document.querySelector('.popup_type_edit-profile-image'),
   editProfileImageForm = popupEditImage.querySelector('.popup__form'),
+  editProfileImageSaveButton = popupEditImage.querySelector('.popup__button'),
   urlInput = editProfileImageForm.querySelector('.popup__input_type_url_image');
 
 profileImage.addEventListener('click', function () {
@@ -93,11 +97,13 @@ profileImage.addEventListener('click', function () {
 async function handleEditProfileImageSubmit(event) {
   event.preventDefault();
   try {
+    editProfileImageSaveButton.textContent = 'Сохранение...';
     const userData = await updateUserAvatar(urlInput.value);
     updateUserInfo(userData);
   } catch (error) {
     console.error('Ошибка при редактировании аватара профиля:', error);
   } finally {
+    editProfileImageSaveButton.textContent = 'Сохранить';
     editProfileImageForm.reset();
     closePopup(popupEditImage);
   }
@@ -110,6 +116,7 @@ editProfileImageForm.addEventListener('submit', handleEditProfileImageSubmit);
 const addButton = document.querySelector('.profile__add-button'),
   popupNewCard = document.querySelector('.popup_type_new-card'),
   addCardForm = popupNewCard.querySelector('.popup__form'),
+  addCardSaveButton = popupNewCard.querySelector('.popup__button'),
   cardNameInput = addCardForm.querySelector('.popup__input_type_card-name'),
   linkInput = addCardForm.querySelector('.popup__input_type_url');
 
@@ -118,6 +125,7 @@ addButton.addEventListener('click', () => openPopup(popupNewCard));
 async function handlePlaceFormSubmit(event) {
   event.preventDefault();
   try {
+    addCardSaveButton.textContent = 'Сохранение...';
     const data = await addCard({
       name: cardNameInput.value,
       link: linkInput.value,
@@ -126,6 +134,7 @@ async function handlePlaceFormSubmit(event) {
   } catch (error) {
     console.error('Ошибка при создании карточки:', error);
   } finally {
+    addCardSaveButton.textContent = 'Сохранить';
     closePopup(popupNewCard);
     addCardForm.reset();
     clearValidation(addCardForm, validationConfig);
