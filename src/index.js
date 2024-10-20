@@ -7,10 +7,7 @@ import {
   getCards,
   getUserData,
   addCard,
-  deleteCard,
   updateUserData,
-  likeCard,
-  unlikeCard,
   updateUserAvatar,
 } from './components/api.js';
 
@@ -29,6 +26,10 @@ popups.forEach((popup) => {
     }
   });
 });
+
+function setLoading(element, loading) {
+  element.textContent = loading ? 'Сохранение...' : 'Сохранить';
+}
 
 /* ------------------------------ Profile edit ------------------------------ */
 
@@ -58,7 +59,7 @@ editProfileButton.addEventListener('click', function () {
 async function handleEditProfileSubmit(event) {
   event.preventDefault();
   try {
-    editProfileSaveButton.textContent = 'Сохранение...';
+    setLoading(editProfileSaveButton, true);
     const userData = await updateUserData({
       name: nameInput.value,
       about: jobInput.value,
@@ -67,7 +68,7 @@ async function handleEditProfileSubmit(event) {
   } catch (error) {
     console.error('Ошибка при редактировании профиля:', error);
   } finally {
-    editProfileSaveButton.textContent = 'Сохранить';
+    setLoading(editProfileSaveButton, false);
     editProfileForm.reset();
     closePopup(popupEdit);
   }
@@ -97,15 +98,15 @@ profileImage.addEventListener('click', function () {
 async function handleEditProfileImageSubmit(event) {
   event.preventDefault();
   try {
-    editProfileImageSaveButton.textContent = 'Сохранение...';
+    setLoading(editProfileImageSaveButton, true);
     const userData = await updateUserAvatar(urlInput.value);
     updateUserInfo(userData);
+    editProfileImageForm.reset();
+    closePopup(popupEditImage);
   } catch (error) {
     console.error('Ошибка при редактировании аватара профиля:', error);
   } finally {
-    editProfileImageSaveButton.textContent = 'Сохранить';
-    editProfileImageForm.reset();
-    closePopup(popupEditImage);
+    setLoading(editProfileImageSaveButton, false);
   }
 }
 
@@ -125,19 +126,19 @@ addButton.addEventListener('click', () => openPopup(popupNewCard));
 async function handlePlaceFormSubmit(event) {
   event.preventDefault();
   try {
-    addCardSaveButton.textContent = 'Сохранение...';
+    setLoading(addCardSaveButton, true);
     const data = await addCard({
       name: cardNameInput.value,
       link: linkInput.value,
     });
     renderCard(data);
-  } catch (error) {
-    console.error('Ошибка при создании карточки:', error);
-  } finally {
-    addCardSaveButton.textContent = 'Сохранить';
     closePopup(popupNewCard);
     addCardForm.reset();
     clearValidation(addCardForm, validationConfig);
+  } catch (error) {
+    console.error('Ошибка при создании карточки:', error);
+  } finally {
+    setLoading(addCardSaveButton, false);
   }
 }
 
@@ -163,10 +164,7 @@ const container = document.querySelector('.places__list');
 function renderCard(data) {
   const cardToAdd = createCard({
     data,
-    deleteCard,
-    likeCard,
     openImage,
-    unlikeCard,
   });
   container.prepend(cardToAdd);
 }
